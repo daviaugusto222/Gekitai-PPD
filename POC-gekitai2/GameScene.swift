@@ -20,13 +20,37 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         addBoard()
-        addCircle(x: 1000, y:300)
-        addCircle(x: 1000, y:420)
+        addCircle(x: 1000, y:100)
+        addCircle(x: 1000, y:220)
+        addCircle(x: 1000, y:340)
+        addCircle(x: 1000, y:460)
+        addCircle(x: 1000, y:570)
+        addCircle(x: 1000, y:680)
+        addCircle(x: 1000, y:790)
+        addCircle(x: 1000, y:900)
+        
+        addCircleBlue(x: 1150, y:100)
+        addCircleBlue(x: 1150, y:220)
+        addCircleBlue(x: 1150, y:340)
+        addCircleBlue(x: 1150, y:460)
+        addCircleBlue(x: 1150, y:570)
+        addCircleBlue(x: 1150, y:680)
+        addCircleBlue(x: 1150, y:790)
+        addCircleBlue(x: 1150, y:900)
+        
     }
     
     func addCircle(x: Int, y: Int){
         circle = SKShapeNode(circleOfRadius: 50)
         circle.fillColor = .yellow
+        circle.position = CGPoint(x: x, y: y)
+        circle.name = "draggable"
+        self.addChild(circle)
+    }
+    
+    func addCircleBlue(x: Int, y: Int){
+        circle = SKShapeNode(circleOfRadius: 50)
+        circle.fillColor = .blue
         circle.position = CGPoint(x: x, y: y)
         circle.name = "draggable"
         self.addChild(circle)
