@@ -48,9 +48,7 @@ class GameScene: SKScene {
         let tileGroup = tileSet.tileGroups.first
         tileMap.fill(with: tileGroup) // fill or set by column/row
         tileMap.anchorPoint = .zero
-        
-        let sizemap = tileMap.mapSize
-        
+                
         self.addChild(tileMap)
     }
     
