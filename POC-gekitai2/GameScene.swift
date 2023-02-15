@@ -17,123 +17,125 @@ class GameScene: SKScene {
     
     private var currentNode: SKNode?
     
-    
-    override func didMove(to view: SKView) {
-        addBoard()
-        addCircle(x: 1000, y:100)
-        addCircle(x: 1000, y:220)
-        addCircle(x: 1000, y:340)
-        addCircle(x: 1000, y:460)
-        addCircle(x: 1000, y:570)
-        addCircle(x: 1000, y:680)
-        addCircle(x: 1000, y:790)
-        addCircle(x: 1000, y:900)
-        
-        addCircleBlue(x: 1150, y:100)
-        addCircleBlue(x: 1150, y:220)
-        addCircleBlue(x: 1150, y:340)
-        addCircleBlue(x: 1150, y:460)
-        addCircleBlue(x: 1150, y:570)
-        addCircleBlue(x: 1150, y:680)
-        addCircleBlue(x: 1150, y:790)
-        addCircleBlue(x: 1150, y:900)
-        
-    }
-    
-    func addCircle(x: Int, y: Int){
-        circle = SKShapeNode(circleOfRadius: 50)
-        circle.fillColor = .yellow
-        circle.position = CGPoint(x: x, y: y)
-        circle.name = "draggable"
-        self.addChild(circle)
-    }
-    
-    func addCircleBlue(x: Int, y: Int){
-        circle = SKShapeNode(circleOfRadius: 50)
-        circle.fillColor = .blue
-        circle.position = CGPoint(x: x, y: y)
-        circle.name = "draggable"
-        self.addChild(circle)
-    }
-    
-    func addBoard() {
-        let whiteTexture = SKTexture(imageNamed: "cell")
-        
-        let whiteTile = SKTileDefinition(texture: whiteTexture)
-        let whiteTileGroup = SKTileGroup(tileDefinition: whiteTile)
-        
-        
-        tileSet = SKTileSet(tileGroups: [whiteTileGroup], tileSetType: .grid)
-        
-        let tileSize = tileSet.defaultTileSize // from image size
+     
+     override func didMove(to view: SKView) {
+         addBoard()
+         addCircle(x: 600, y:50)
+         addCircle(x: 600, y:120)
+         addCircle(x: 600, y:190)
+         addCircle(x: 600, y:260)
+         addCircle(x: 600, y:320)
+         addCircle(x: 600, y:390)
+         addCircle(x: 600, y:460)
+         addCircle(x: 600, y:520)
+         
+         addCircleBlue(x: 700, y:50)
+         addCircleBlue(x: 700, y:120)
+         addCircleBlue(x: 700, y:190)
+         addCircleBlue(x: 700, y:260)
+         addCircleBlue(x: 700, y:320)
+         addCircleBlue(x: 700, y:390)
+         addCircleBlue(x: 700, y:460)
+         addCircleBlue(x: 700, y:520)
+         
+     }
+     
+     func addCircle(x: Int, y: Int){
+         circle = SKShapeNode(circleOfRadius: 20)
+         circle.fillColor = .yellow
+         circle.position = CGPoint(x: x, y: y)
+         circle.name = "draggable"
+         self.addChild(circle)
+     }
+     
+     func addCircleBlue(x: Int, y: Int){
+         circle = SKShapeNode(circleOfRadius: 20)
+         circle.fillColor = .blue
+         circle.position = CGPoint(x: x, y: y)
+         circle.name = "draggable"
+         self.addChild(circle)
+     }
+     
+     func addBoard() {
+         let whiteTexture = SKTexture(imageNamed: "cell")
+         
+         let whiteTile = SKTileDefinition(texture: whiteTexture)
+         let whiteTileGroup = SKTileGroup(tileDefinition: whiteTile)
+         
+         
+         tileSet = SKTileSet(tileGroups: [whiteTileGroup], tileSetType: .grid)
+         
+         let tileSize = tileSet.defaultTileSize // from image size
 
-        //let tileSize = CGSize(width: 100, height: 100)
-        tileMap = SKTileMapNode(tileSet: tileSet, columns: 6, rows: 6, tileSize: tileSize)
-        let tileGroup = tileSet.tileGroups.first
-        tileMap.fill(with: tileGroup) // fill or set by column/row
-        tileMap.anchorPoint = .zero
-                
-        self.addChild(tileMap)
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches {
-            self.position(atPoint: t.location(in: self))
-        }
-        
-        if let touch = touches.first {
-            let location = touch.location(in: self)
-            
-            let touchedNodes = self.nodes(at: location)
-            for node in touchedNodes.reversed() {
-                if node.name == "draggable" {
-                    self.currentNode = node
-                }
-            }
-        }
-        
-    }
-    
-    func position(atPoint pos: CGPoint){
-        let column = tileMap.tileColumnIndex(fromPosition: pos)
-        let row = tileMap.tileRowIndex(fromPosition: pos)
-        let center = tileMap.centerOfTile(atColumn: column, row: row)
-        print("\(column) - \(row) : center \(center)")
-        
-    }
-    
-    func centerTile(atPoint pos: CGPoint) -> CGPoint {
-        let column = tileMap.tileColumnIndex(fromPosition: pos)
-        let row = tileMap.tileRowIndex(fromPosition: pos)
-        let center = tileMap.centerOfTile(atColumn: column, row: row)
-        return center
-        
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let touch = touches.first, let node = self.currentNode {
-            let touchLocation = touch.location(in: self)
-            node.position = touchLocation
-        }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        //centraliza a peça no meio do espaço
-        if let node = self.currentNode, let touch = touches.first  {
-            let center = centerTile(atPoint: touch.location(in: self))
-            node.position = center
-        }
-        
-        //Finaliza a movimentação do drag and drop
-        self.currentNode = nil
-        
-        //Printando a posição
-        position(atPoint: (touches.first?.location(in: self))!)
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.currentNode = nil
-    }
+         //let tileSize = CGSize(width: 100, height: 100)
+         tileMap = SKTileMapNode(tileSet: tileSet, columns: 6, rows: 6, tileSize: tileSize)
+         let tileGroup = tileSet.tileGroups.first
+         tileMap.fill(with: tileGroup) // fill or set by column/row
+         tileMap.anchorPoint = .zero
+                 
+         self.addChild(tileMap)
+     }
+     
+     
+     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+         for t in touches {
+             self.position(atPoint: t.location(in: self))
+         }
+         
+         if let touch = touches.first {
+             let location = touch.location(in: self)
+             
+             let touchedNodes = self.nodes(at: location)
+             for node in touchedNodes.reversed() {
+                 if node.name == "draggable" {
+                     self.currentNode = node
+                 }
+             }
+         }
+         
+     }
+     
+     func position(atPoint pos: CGPoint){
+         let column = tileMap.tileColumnIndex(fromPosition: pos)
+         let row = tileMap.tileRowIndex(fromPosition: pos)
+         let center = tileMap.centerOfTile(atColumn: column, row: row)
+         print("\(column) - \(row) : center \(center)")
+         
+     }
+     
+     func centerTile(atPoint pos: CGPoint) -> CGPoint {
+         let column = tileMap.tileColumnIndex(fromPosition: pos)
+         let row = tileMap.tileRowIndex(fromPosition: pos)
+         let center = tileMap.centerOfTile(atColumn: column, row: row)
+         return center
+         
+     }
+     
+     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+         if let touch = touches.first, let node = self.currentNode {
+             let touchLocation = touch.location(in: self)
+             node.position = touchLocation
+         }
+     }
+     
+     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+         
+         //centraliza a peça no meio do espaço
+         if let node = self.currentNode, let touch = touches.first  {
+             let center = centerTile(atPoint: touch.location(in: self))
+             node.position = center
+         }
+         
+         //Finaliza a movimentação do drag and drop
+         self.currentNode = nil
+         
+         //Printando a posição
+         position(atPoint: (touches.first?.location(in: self))!)
+     }
+     
+     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+         self.currentNode = nil
+     }
+     
     
 }
