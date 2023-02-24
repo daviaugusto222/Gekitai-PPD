@@ -15,7 +15,7 @@ class TableCell: UITableViewCell {
     @IBOutlet weak var mensagem: UITextView!
 }
 
-struct mensagem {
+struct Mensagem {
     var nome: String
     var msg: String
     var data: String
@@ -23,8 +23,16 @@ struct mensagem {
 
 enum Player: String {
     case disconnected = ""
-    case playerTop = "top"
-    case playerBottom = "bottom"
+    case playerTop = "playerTop"
+    case playerBottom = "playerBottom"
+}
+
+enum GameState: String {
+    case awaitingConnection = "Awaiting Connection from another Player"
+    case waiting = "Waiting for the Opponent's Move"
+    case yourTurn = "Make your Move!"
+    case youWin = "You Win!"
+    case youLose = "You Lose!"
 }
 
 class GameViewController: UIViewController {
@@ -34,12 +42,34 @@ class GameViewController: UIViewController {
     @IBOutlet weak var textfield: UITextField!
     
     let service: Service = Service()
-    var textos = [mensagem]() {
+    var textos = [Mensagem]() {
         didSet {
             table.reloadData()
         }
     }
+    
     var player: Player = .disconnected
+    
+    var gameScene: GameScene {
+        return skview.scene as! GameScene
+    }
+    
+    lazy var stateView: UIView = {
+        let view = UIView(frame: self.skview.frame)
+        view.backgroundColor = UIColor.init(white: 0, alpha: 0.5)
+        return view
+    }()
+    
+    var state: GameState! = .awaitingConnection {
+        didSet {
+            switch state {
+            case .yourTurn:
+                dismissStateView()
+            default:
+                showStateView()
+            }
+        }
+    }
     
     
     override func viewDidLoad() {
@@ -49,15 +79,9 @@ class GameViewController: UIViewController {
         table.delegate = self
         service.delegate = self
         
-        //if let view = self.view as! SKView? {
-        // Load the SKScene from 'GameScene.sks'
-        
         if let scene = GKScene(fileNamed: "GameScene"), let scene = scene.rootNode as! GameScene? {
-            //if let scene = SKScene(fileNamed: "GameScene") {
-            // Set the scale mode to scale to fit the window
             scene.scaleMode = .aspectFill
-            
-            // Present the scene
+
             skview.presentScene(scene)
         }
         
@@ -69,51 +93,27 @@ class GameViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //askNickname()
-        self.service.conectaPlayer(player: player.rawValue)
+        self.service.conectaPlayer()
     }
     
     @IBAction func enviaMensagem(_ sender: Any) {
-        service.enviaMensagem(player: player.rawValue, mensagem: textfield.text ?? "nada")
+        service.enviaMensagem(nome: player.rawValue, mensagem: textfield.text ?? "nada")
         self.textfield.text?.removeAll()
     }
     
-    func askNickname() {
-        let alertController = UIAlertController(title: "GEKITAI", message: "Entre com seu nome", preferredStyle: UIAlertController.Style.alert)
-        
-        alertController.addTextField(configurationHandler: nil)
-        
-        let OKAction = UIAlertAction(title: "Entrar", style: UIAlertAction.Style.default) { (action) -> Void in
-            let textfield = alertController.textFields![0]
-            if textfield.text?.count == 0 {
-                self.askNickname()
-            }
-            else {
-                //self.player = textfield.text
-                self.service.conectaPlayer(player: textfield.text ?? "bundao")
-                
-            }
-        }
-        
-        alertController.addAction(OKAction)
-        present(alertController, animated: true, completion: nil)
-        
+    @IBAction func finalizarTurno(_ sender: Any) {
+        self.service.move(from: self.gameScene.previousPos!, to: self.gameScene.newPos!)
     }
     
-    override var shouldAutorotate: Bool {
-        return true
+    @IBAction func desistir(_ sender: Any) {
     }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
-        } else {
-            return .all
-        }
+    func showStateView() {
+        self.view.addSubview(stateView)
     }
     
-    override var prefersStatusBarHidden: Bool {
-        return true
+    func dismissStateView() {
+        stateView.removeFromSuperview()
     }
 }
 
@@ -144,24 +144,37 @@ extension GameViewController: ServiceDelegate {
     func didStart() {
         print("Conectado")
         
-
+        if player == .playerBottom {
+            state = .yourTurn
+        } else {
+            state = .waiting
+        }
         
     }
     
     func yourPlayer(_ team: String) {
-        self.player = Player(rawValue: team) ?? .disconnected
+        
+        player = Player(rawValue: team) ?? .disconnected
     }
     
     func newTurn(_ name: String) {
-        print("seu turno")
+        self.gameScene.newPos = nil
+        self.gameScene.previousPos = nil
+        
+        if name == player.rawValue {
+            state = .waiting
+        } else {
+            state = .yourTurn
+        }
     }
     
-    func playerDidMove(_ name: String, from originIndex: Int, to newIndex: Int) {
-        print("1")
+    func playerDidMove(_ name: String, from originIndex: Index, to newIndex: Index) {
+        print("ALGO SE MOVEU \(originIndex) -> \(newIndex)")
+        gameScene.movePiece(originIndex: originIndex, newIndex: newIndex)
     }
     
     func receivedMessage(_ name: String, msg: String, data: String) {
-        textos.append(mensagem(nome: name, msg: msg, data: data))
+        textos.append(Mensagem(nome: name, msg: msg, data: data))
     }
     
     
