@@ -105,6 +105,7 @@ class GameViewController: UIViewController {
         for move in gameScene.movePices {
             self.service.move(from: move.previousPos, to: move.newPos)
         }
+        self.service.newTurn()
     }
     
     @IBAction func desistir(_ sender: Any) {
@@ -162,6 +163,7 @@ extension GameViewController: ServiceDelegate {
     func newTurn(_ name: String) {
         self.gameScene.newPos = nil
         self.gameScene.previousPos = nil
+        self.gameScene.movePices = []
         
         if name == player.rawValue {
             state = .waiting

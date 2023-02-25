@@ -45,6 +45,10 @@ class Service {
         self.socket.emit("ctUser")
     }
     
+    func newTurn() {
+        self.socket.emit("newTurn", player)
+    }
+    
     func exitPlayer(player: String) {
         self.socket.emit("exitUser", player)
     }

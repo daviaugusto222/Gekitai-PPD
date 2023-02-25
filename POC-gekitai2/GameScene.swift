@@ -16,8 +16,6 @@ struct Piece: Equatable {
     }
     
     var node: SKShapeNode
-    var column: Int
-    var row: Int
     let xOrigin: Double
     let yOrigin: Double
     let color: Color
@@ -30,7 +28,6 @@ class GameScene: SKScene {
     var tileMap: SKTileMapNode!
     
     private var currentNode: SKNode?
-    private var lastPosNode: CGPoint?
     
     var previousPos: PositionPiece?
     var newPos: PositionPiece?
@@ -38,28 +35,37 @@ class GameScene: SKScene {
     var pieces: [Piece] = []
     var movePices: [Move] = []
     
+    var originYellowPositions: [PositionPiece] = []
+    var originBluePositions: [PositionPiece] = []
+    
     override func didMove(to view: SKView) {
+        
+        originYellowPositions = [PositionPiece(x: 140.0, y: 120.0),
+                                 PositionPiece(x: 200.0, y: 120.0),
+                                 PositionPiece(x: 260.0, y: 120.0),
+                                 PositionPiece(x: 320.0, y: 120.0),
+                                 PositionPiece(x: 380.0, y: 120.0),
+                                 PositionPiece(x: 440.0, y: 120.0),
+                                 PositionPiece(x: 500.0, y: 120.0),
+                                 PositionPiece(x: 560.0, y: 120.0)]
+        
+        originBluePositions = [PositionPiece(x: 140.0, y: 680.0),
+                               PositionPiece(x: 200.0, y: 680.0),
+                               PositionPiece(x: 260.0, y: 680.0),
+                               PositionPiece(x: 320.0, y: 680.0),
+                               PositionPiece(x: 380.0, y: 680.0),
+                               PositionPiece(x: 440.0, y: 680.0),
+                               PositionPiece(x: 500.0, y: 680.0),
+                               PositionPiece(x: 560.0, y: 680.0)]
+        
         addBoard()
         
-        addPiece(x: 140.0, y: 120.0, .yellow)
-        addPiece(x: 200.0, y: 120.0, .yellow)
-        addPiece(x: 260.0, y: 120.0, .yellow)
-        addPiece(x: 320.0, y: 120.0, .yellow)
-        addPiece(x: 380.0, y: 120.0, .yellow)
-        addPiece(x: 440.0, y: 120.0, .yellow)
-        addPiece(x: 500.0, y: 120.0, .yellow)
-        addPiece(x: 560.0, y: 120.0, .yellow)
-        
-        addPiece(x: 140.0, y: 680.0, .blue)
-        addPiece(x: 200.0, y: 680.0, .blue)
-        addPiece(x: 260.0, y: 680.0, .blue)
-        addPiece(x: 320.0, y: 680.0, .blue)
-        addPiece(x: 380.0, y: 680.0, .blue)
-        addPiece(x: 440.0, y: 680.0, .blue)
-        addPiece(x: 500.0, y: 680.0, .blue)
-        addPiece(x: 560.0, y: 680.0, .blue)
-        
-        
+        for pos in originYellowPositions {
+            addPiece(x: pos.x, y: pos.y, .yellow)
+        }
+        for pos in originBluePositions {
+            addPiece(x: pos.x, y: pos.y, .blue)
+        }
     }
     
     func addPiece(x: Double, y: Double, _ color: UIColor){
@@ -75,7 +81,7 @@ class GameScene: SKScene {
         } else {
             colorPiece = .blue
         }
-        self.pieces.append(Piece(node: circle, column: -1, row: -1, xOrigin: x, yOrigin: y, color: colorPiece))
+        self.pieces.append(Piece(node: circle, xOrigin: x, yOrigin: y, color: colorPiece))
     }
     
     func removePiece(from origin: Piece) {
@@ -116,25 +122,34 @@ class GameScene: SKScene {
     }
     
     func movePiece(originPos: PositionPiece, newPos: PositionPiece) {
-        let pieceOrigin = findPiece(from: originPos)
-        
-        guard let piece = pieceOrigin else { return }
-        removePiece(from: piece)
-        
-        var color: UIColor
-        if pieceOrigin?.color == .yellow {
-            color = .yellow
-        } else {
-            color = .blue
+        if let piece = findPiece(from: originPos) {
+            piece.node.position = CGPoint(x: newPos.x, y: newPos.y)
         }
         
-     
-        if piece.column >= 0 && piece.column <= 5 && piece.row >= 0 && piece.row <= 5 {
-            let center = centerTile(atPoint: CGPoint(x: newPos.x, y: newPos.y))
-            addPiece(x: center.x, y: center.y, color)
-        } else {
-            addPiece(x: newPos.x, y: newPos.y, color)
-        }
+//
+//        let pieceOrigin = findPiece(from: originPos)
+//
+//        guard let piece = pieceOrigin else { return }
+//        removePiece(from: piece)
+//
+//        var color: UIColor
+//        if pieceOrigin?.color == .yellow {
+//            color = .yellow
+//        } else {
+//            color = .blue
+//        }
+//
+//        let position = piece.node.position
+//        let column = tileMap.tileColumnIndex(fromPosition: position)
+//        let row = tileMap.tileRowIndex(fromPosition: position)
+//
+//        if column < 0 || column > 5 || row < 0 || row > 5  {
+//            addPiece(x: newPos.x, y: newPos.y, color)
+//        } else {
+//
+//            let center = centerTile(atPoint: CGPoint(x: newPos.x, y: newPos.y))
+//            addPiece(x: center.x, y: center.y, color)
+//        }
         
     }
     
@@ -146,11 +161,6 @@ class GameScene: SKScene {
             for node in touchedNodes.reversed() {
                 if node.name == "draggable" {
                     self.currentNode = node
-                    self.lastPosNode = node.position
-                    
-                    //let position = touch.location(in: self)
-                    //let column = tileMap.tileColumnIndex(fromPosition: position)
-                    //let row = tileMap.tileRowIndex(fromPosition: position)
                     self.previousPos = PositionPiece(x: node.position.x, y: node.position.y)
                 }
             }
@@ -170,31 +180,36 @@ class GameScene: SKScene {
         //centraliza a peça no meio do espaço
         if let node = self.currentNode, let touch = touches.first {
             
+            //Apartir da posição do node encontra linha e coluna
             let position = touch.location(in: self)
             let column = tileMap.tileColumnIndex(fromPosition: position)
             let row = tileMap.tileRowIndex(fromPosition: position)
             
-            if column < 0 || column > 5 || row < 0 || row > 5 {
+            let nodesInPosition = tileMap.nodes(at: position)
+            if nodesInPosition.count <= 1 {
+
+                //se o node estiver fora do tabuleiro 6x6 (0 ate 5)
+                if column < 0 || column > 5 || row < 0 || row > 5 {
+                    for piece in pieces where piece.node == node {
+                        node.position = CGPoint(x: piece.xOrigin, y: piece.yOrigin)
+                        self.newPos = PositionPiece(x: piece.xOrigin, y: piece.yOrigin)
+                    }
+                } else {
+                    let center = centerTile(atPoint: position)
+                    node.position = center
+                    self.newPos = PositionPiece(x: center.x, y: center.y)
+                }
+            } else {
                 for piece in pieces where piece.node == node {
                     node.position = CGPoint(x: piece.xOrigin, y: piece.yOrigin)
                     self.newPos = PositionPiece(x: piece.xOrigin, y: piece.yOrigin)
                 }
-            } else {
-                let center = centerTile(atPoint: position)
-                node.position = center
-                self.newPos = PositionPiece(x: center.x, y: center.y)
                 
-                
+                //adicionar para quando tiver dentro do tablado ir para a posiçao do tablado
+                // usar a posição do tile e não da bolinha
             }
-            
             
             movePices.append(Move(previousPos: self.previousPos!, newPos: self.newPos!))
-            for i in pieces.indices {
-                if pieces[i].node == node {
-                    pieces[i].column = column
-                    pieces[i].row = row
-                }
-            }
             
             
         }
