@@ -14,7 +14,7 @@ protocol ServiceDelegate: AnyObject {
     func yourPlayer(_ team: String)
     
     func newTurn(_ name: String)
-    func playerDidMove(_ name: String, from originIndex: Index , to newIndex: Index)
+    func playerDidMove(_ name: String, from originIndex: PositionPiece , to newIndex: PositionPiece)
     
     func receivedMessage(_ name: String, msg: String, data: String)
 }
@@ -53,8 +53,8 @@ class Service {
         self.socket.emit("chatMessage", nome, mensagem)
     }
     
-    func move(from originIndex: Index, to newIndex: Index) {
-        self.socket.emit("playerMove", player, originIndex.row, originIndex.column, newIndex.row, newIndex.column)
+    func move(from originPos: PositionPiece, to newPos: PositionPiece) {
+        self.socket.emit("playerMove", player, originPos.x, originPos.y, newPos.x, newPos.y)
     }
     
     func configuraSocket() {
@@ -86,8 +86,9 @@ class Service {
         }
         
         socket.on("playerMove") { [weak self] data, ack in
-            if let name = data[0] as? String, let originX = data[1] as? Int, let originY = data[2] as? Int, let newX = data[3] as? Int, let newY = data[4] as? Int {
-                self?.delegate.playerDidMove(name, from: Index(row: originX, column: originY), to: Index(row: newX, column: newY))
+            if let name = data[0] as? String, let originX = data[1] as? Double, let originY = data[2] as? Double, let newX = data[3] as? Double, let newY = data[4] as? Double {
+                //self?.delegate.playerDidMove(name, from: Index(row: originX, column: originY), to: Index(row: newX, column: newY))
+                self?.delegate.playerDidMove(name, from: PositionPiece(x: originX, y: originY), to: PositionPiece(x: newX, y: newY))
             }
         }
         

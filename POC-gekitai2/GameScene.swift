@@ -18,8 +18,8 @@ struct Piece: Equatable {
     var node: SKShapeNode
     var column: Int
     var row: Int
-    var x: Double
-    var y: Double
+    let xOrigin: Double
+    let yOrigin: Double
     let color: Color
 }
 
@@ -32,10 +32,11 @@ class GameScene: SKScene {
     private var currentNode: SKNode?
     private var lastPosNode: CGPoint?
     
-    var previousPos: Index?
-    var newPos: Index?
+    var previousPos: PositionPiece?
+    var newPos: PositionPiece?
     
     var pieces: [Piece] = []
+    var movePices: [Move] = []
     
     override func didMove(to view: SKView) {
         addBoard()
@@ -66,7 +67,6 @@ class GameScene: SKScene {
         circle.fillColor = color
         circle.position = CGPoint(x: x, y: y)
         circle.name = "draggable"
-        //self.addChild(circle)
         self.tileMap.addChild(circle)
         
         var colorPiece: Piece.Color
@@ -75,31 +75,20 @@ class GameScene: SKScene {
         } else {
             colorPiece = .blue
         }
-        self.pieces.append(Piece(node: circle, column: -1, row: -1,x: x, y: y, color: colorPiece))
+        self.pieces.append(Piece(node: circle, column: -1, row: -1, xOrigin: x, yOrigin: y, color: colorPiece))
     }
     
     func removePiece(from origin: Piece) {
         // remover piece.node da board
         // remover piece do pieces
-        //let center = tileMap.centerOfTile(atColumn: index.column, row: index.row)
         origin.node.removeFromParent()
         guard let pieceIndex = pieces.firstIndex(of: origin) else { return }
         pieces.remove(at: pieceIndex)
     }
     
-    func findPiece(from index: Index) -> Piece? {
+    func findPiece(from pos: PositionPiece) -> Piece? {
         // buscar piece que ta no index (no pieces)
-        if index.column > 5 || index.row > 5 || index.column < 0 || index.row < 0 {
-            
-            let node = tileMap.nodes(at: CGPoint(x: 140.0, y: 680.0))
-            for i in pieces.indices {
-                if pieces[i].node == node.first {
-                    return pieces[i]
-                }
-            }
-        }
-        
-        for piece in pieces where piece.column == index.column && piece.row == index.row {
+        for piece in pieces where piece.node.position.x == pos.x && piece.node.position.y == pos.y {
             return piece
         }
         return nil
@@ -107,16 +96,10 @@ class GameScene: SKScene {
     
     func addBoard() {
         let whiteTexture = SKTexture(imageNamed: "cell")
-        
         let whiteTile = SKTileDefinition(texture: whiteTexture)
         let whiteTileGroup = SKTileGroup(tileDefinition: whiteTile)
-        
-        
         tileSet = SKTileSet(tileGroups: [whiteTileGroup], tileSetType: .grid)
-        
         let tileSize = tileSet.defaultTileSize // from image size
-        
-        //let tileSize = CGSize(width: 100, height: 100)
         tileMap = SKTileMapNode(tileSet: tileSet, columns: 6, rows: 6, tileSize: tileSize)
         let tileGroup = tileSet.tileGroups.first
         tileMap.fill(with: tileGroup) // fill or set by column/row
@@ -125,31 +108,16 @@ class GameScene: SKScene {
         self.addChild(tileMap)
     }
     
-    func position(atPoint pos: CGPoint){
-        let column = tileMap.tileColumnIndex(fromPosition: pos)
-        let row = tileMap.tileRowIndex(fromPosition: pos)
-        let center = tileMap.centerOfTile(atColumn: column, row: row)
-        print("\(column) - \(row) : center \(center)")
-        
-    }
-    
     func centerTile(atPoint pos: CGPoint) -> CGPoint {
         let column = tileMap.tileColumnIndex(fromPosition: pos)
         let row = tileMap.tileRowIndex(fromPosition: pos)
         let center = tileMap.centerOfTile(atColumn: column, row: row)
         return center
-        
     }
     
-    func movePiece(originIndex: Index, newIndex: Index) {
-        // buscar piece que ta no index (no pieces)
-        let pieceOrigin = findPiece(from: originIndex)
+    func movePiece(originPos: PositionPiece, newPos: PositionPiece) {
+        let pieceOrigin = findPiece(from: originPos)
         
-        
-        /// Alternativa 1
-        // removeCircle
-        // remover piece.node da board
-        // remover piece do pieces
         guard let piece = pieceOrigin else { return }
         removePiece(from: piece)
         
@@ -160,24 +128,18 @@ class GameScene: SKScene {
             color = .blue
         }
         
-        // adicionar de novo, com cor do que foi removido, e posicao nova (addCircle)
-        let center = tileMap.centerOfTile(atColumn: newIndex.column, row: newIndex.row)
-        addPiece(x: center.x, y: center.y, color)
-    
-        
-        /// Alternativa 2
-        // piece.node.removeFromParent
-        // mudar posicao do node da piece pra nova posicao
-        // mudar posicao da piece em si (x e y) para nova posicao
-        // adicionar a piece de novo na board
-        // :)
-        
+     
+        if piece.column >= 0 && piece.column <= 5 && piece.row >= 0 && piece.row <= 5 {
+            let center = centerTile(atPoint: CGPoint(x: newPos.x, y: newPos.y))
+            addPiece(x: center.x, y: center.y, color)
+        } else {
+            addPiece(x: newPos.x, y: newPos.y, color)
+        }
         
     }
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         if let touch = touches.first {
             let location = touch.location(in: self)
             let touchedNodes = self.nodes(at: location)
@@ -186,10 +148,10 @@ class GameScene: SKScene {
                     self.currentNode = node
                     self.lastPosNode = node.position
                     
-                    let position = touch.location(in: self)
-                    let column = tileMap.tileColumnIndex(fromPosition: position)
-                    let row = tileMap.tileRowIndex(fromPosition: position)
-                    self.previousPos = Index(row: row, column: column)
+                    //let position = touch.location(in: self)
+                    //let column = tileMap.tileColumnIndex(fromPosition: position)
+                    //let row = tileMap.tileRowIndex(fromPosition: position)
+                    self.previousPos = PositionPiece(x: node.position.x, y: node.position.y)
                 }
             }
         }
@@ -211,28 +173,31 @@ class GameScene: SKScene {
             let position = touch.location(in: self)
             let column = tileMap.tileColumnIndex(fromPosition: position)
             let row = tileMap.tileRowIndex(fromPosition: position)
-            self.newPos = Index(row: row, column: column)
+            
             if column < 0 || column > 5 || row < 0 || row > 5 {
-                
-                //node.position = lastPosNode ?? CGPoint.zero
-                
+                for piece in pieces where piece.node == node {
+                    node.position = CGPoint(x: piece.xOrigin, y: piece.yOrigin)
+                    self.newPos = PositionPiece(x: piece.xOrigin, y: piece.yOrigin)
+                }
             } else {
                 let center = centerTile(atPoint: position)
                 node.position = center
+                self.newPos = PositionPiece(x: center.x, y: center.y)
                 
-                for i in pieces.indices {
-                    if pieces[i].node == node {
-                        pieces[i].column = column
-                        pieces[i].row = row
-                    }
-                }
                 
             }
             
             
+            movePices.append(Move(previousPos: self.previousPos!, newPos: self.newPos!))
+            for i in pieces.indices {
+                if pieces[i].node == node {
+                    pieces[i].column = column
+                    pieces[i].row = row
+                }
+            }
+            
             
         }
-        
         //Finaliza a movimentação do drag and drop
         self.currentNode = nil
     }

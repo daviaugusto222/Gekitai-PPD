@@ -102,7 +102,9 @@ class GameViewController: UIViewController {
     }
     
     @IBAction func finalizarTurno(_ sender: Any) {
-        self.service.move(from: self.gameScene.previousPos!, to: self.gameScene.newPos!)
+        for move in gameScene.movePices {
+            self.service.move(from: move.previousPos, to: move.newPos)
+        }
     }
     
     @IBAction func desistir(_ sender: Any) {
@@ -168,9 +170,9 @@ extension GameViewController: ServiceDelegate {
         }
     }
     
-    func playerDidMove(_ name: String, from originIndex: Index, to newIndex: Index) {
+    func playerDidMove(_ name: String, from originIndex: PositionPiece, to newIndex: PositionPiece) {
         print("ALGO SE MOVEU \(originIndex) -> \(newIndex)")
-        gameScene.movePiece(originIndex: originIndex, newIndex: newIndex)
+        gameScene.movePiece(originPos: originIndex, newPos: newIndex)
     }
     
     func receivedMessage(_ name: String, msg: String, data: String) {
