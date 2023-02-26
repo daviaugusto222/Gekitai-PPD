@@ -93,7 +93,7 @@ class GameViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.service.conectaPlayer()
+        //self.service.conectaPlayer()
     }
     
     @IBAction func enviaMensagem(_ sender: Any) {
@@ -102,13 +102,25 @@ class GameViewController: UIViewController {
     }
     
     @IBAction func finalizarTurno(_ sender: Any) {
-        for move in gameScene.movePices {
+        for move in gameScene.movesPices {
             self.service.move(from: move.previousPos, to: move.newPos)
         }
         self.service.newTurn()
     }
     
     @IBAction func desistir(_ sender: Any) {
+        let alert = UIAlertController(title: "Desistir", message: "Você realmente deseja desistir?", preferredStyle: .alert)
+        let exit = UIAlertAction(title: "Desistir", style: .destructive, handler: { _ in self.service.surreder() })
+        alert.addAction(exit)
+        alert.addAction(.init(title: "Voltar", style: .cancel, handler: .none))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK: - Restart
+    func restart() {
+        service.restart()
+        viewDidLoad()
+        viewDidAppear(true)
     }
     
     func showStateView() {
@@ -145,26 +157,35 @@ extension GameViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension GameViewController: ServiceDelegate {
     func didStart() {
-        print("Conectado")
-        
         if player == .playerBottom {
             state = .yourTurn
         } else {
             state = .waiting
         }
-        
+    }
+    
+    func didWin() {
+        let alert = UIAlertController(title: "You Win", message: "", preferredStyle: .alert)
+        let exit = UIAlertAction(title: "Play Again", style: .default, handler: { _ in self.restart() })
+        alert.addAction(exit)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func didLose() {
+        let alert = UIAlertController(title: "You Lose", message: "", preferredStyle: .alert)
+        let exit = UIAlertAction(title: "Play Again", style: .default, handler: { _ in self.restart() })
+        alert.addAction(exit)
+        self.present(alert, animated: true, completion: nil)
     }
     
     func yourPlayer(_ team: String) {
-        
         player = Player(rawValue: team) ?? .disconnected
     }
     
     func newTurn(_ name: String) {
         self.gameScene.newPos = nil
         self.gameScene.previousPos = nil
-        self.gameScene.movePices = []
-        
+        self.gameScene.movesPices = []
         if name == player.rawValue {
             state = .waiting
         } else {
@@ -180,6 +201,4 @@ extension GameViewController: ServiceDelegate {
     func receivedMessage(_ name: String, msg: String, data: String) {
         textos.append(Mensagem(nome: name, msg: msg, data: data))
     }
-    
-    
 }

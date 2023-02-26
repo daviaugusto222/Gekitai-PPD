@@ -10,13 +10,12 @@ import SocketIO
 
 protocol ServiceDelegate: AnyObject {
     func didStart()
-    
     func yourPlayer(_ team: String)
-    
     func newTurn(_ name: String)
     func playerDidMove(_ name: String, from originIndex: PositionPiece , to newIndex: PositionPiece)
-    
     func receivedMessage(_ name: String, msg: String, data: String)
+    func didWin()
+    func didLose()
 }
 
 class Service {
@@ -32,13 +31,22 @@ class Service {
     var player: String!
     
     init() {
-        manager = SocketManager(socketURL: URL(string: "http://localhost:3000")!, config: [.log(true), .compress, .forceWebsockets(true)])
+        manager = SocketManager(socketURL: URL(string: "http://localhost:3000")!, config: [.log(true), .compress])
         socket = manager.defaultSocket
         configuraSocket()
     }
     
     private func start() {
         socket.connect()
+    }
+    
+    func restart() {
+        socket.disconnect()
+        socket.connect()
+    }
+    
+    func surreder() {
+        self.socket.emit("surrender", player)
     }
     
     func conectaPlayer() {
@@ -105,6 +113,14 @@ class Service {
             if let name = data[0] as? String {
                 self?.delegate.newTurn(name)
             }
+        }
+        
+        socket.on("win") { [weak self] data, ack in
+            self?.delegate.didWin()
+        }
+        
+        socket.on("lose") { [weak self] data, ack in
+            self?.delegate.didLose()
         }
         
         socket.onAny {

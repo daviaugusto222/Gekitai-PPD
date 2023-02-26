@@ -33,7 +33,7 @@ class GameScene: SKScene {
     var newPos: PositionPiece?
     
     var pieces: [Piece] = []
-    var movePices: [Move] = []
+    var movesPices: [Move] = []
     
     var originYellowPositions: [PositionPiece] = []
     var originBluePositions: [PositionPiece] = []
@@ -184,10 +184,9 @@ class GameScene: SKScene {
             let position = touch.location(in: self)
             let column = tileMap.tileColumnIndex(fromPosition: position)
             let row = tileMap.tileRowIndex(fromPosition: position)
+            let center = centerTile(atPoint: position)
             
-            let nodesInPosition = tileMap.nodes(at: position)
-            if nodesInPosition.count <= 1 {
-
+            let nodesInCenter = tileMap.nodes(at: center)
                 //se o node estiver fora do tabuleiro 6x6 (0 ate 5)
                 if column < 0 || column > 5 || row < 0 || row > 5 {
                     for piece in pieces where piece.node == node {
@@ -195,23 +194,20 @@ class GameScene: SKScene {
                         self.newPos = PositionPiece(x: piece.xOrigin, y: piece.yOrigin)
                     }
                 } else {
-                    let center = centerTile(atPoint: position)
-                    node.position = center
-                    self.newPos = PositionPiece(x: center.x, y: center.y)
+                    // se existir mais que um node na posição, volta para a posição anterior
+                    if nodesInCenter.count > 1 && nodesInCenter.contains(node) {
+                        node.position = CGPoint(x: previousPos!.x, y: previousPos!.y)
+                        self.newPos = PositionPiece(x: previousPos!.x, y: previousPos!.y)
+                    } else if nodesInCenter.count >= 1 && !nodesInCenter.contains(node) {
+                        node.position = CGPoint(x: previousPos!.x, y: previousPos!.y)
+                        self.newPos = PositionPiece(x: previousPos!.x, y: previousPos!.y)
+                    
+                    } else {
+                        node.position = center
+                        self.newPos = PositionPiece(x: center.x, y: center.y)
+                    }
                 }
-            } else {
-                for piece in pieces where piece.node == node {
-                    node.position = CGPoint(x: piece.xOrigin, y: piece.yOrigin)
-                    self.newPos = PositionPiece(x: piece.xOrigin, y: piece.yOrigin)
-                }
-                
-                //adicionar para quando tiver dentro do tablado ir para a posiçao do tablado
-                // usar a posição do tile e não da bolinha
-            }
-            
-            movePices.append(Move(previousPos: self.previousPos!, newPos: self.newPos!))
-            
-            
+            movesPices.append(Move(previousPos: self.previousPos!, newPos: self.newPos!)) 
         }
         //Finaliza a movimentação do drag and drop
         self.currentNode = nil
