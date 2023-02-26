@@ -15,7 +15,7 @@ struct Piece: Equatable {
         case yellow
     }
     
-    var node: SKShapeNode
+    var node: SKSpriteNode
     let xOrigin: Double
     let yOrigin: Double
     let color: Color
@@ -69,19 +69,30 @@ class GameScene: SKScene {
     }
     
     func addPiece(x: Double, y: Double, _ color: UIColor){
-        circle = SKShapeNode(circleOfRadius: 20)
-        circle.fillColor = color
-        circle.position = CGPoint(x: x, y: y)
-        circle.name = "draggable"
-        self.tileMap.addChild(circle)
+        //circle = SKShapeNode(circleOfRadius: 20)
+        //circle.fillColor = color
         
+        
+        var image = UIImage(named: "bottom")
+        var node = SKSpriteNode()
         var colorPiece: Piece.Color
         if color == .yellow {
             colorPiece = .yellow
+            image = UIImage(named: "bottom")
         } else {
             colorPiece = .blue
+            image = UIImage(named: "top")
         }
-        self.pieces.append(Piece(node: circle, xOrigin: x, yOrigin: y, color: colorPiece))
+        
+        let texture = SKTexture(image: image!)
+        node = SKSpriteNode(texture: texture)
+        
+        node.position = CGPoint(x: x, y: y)
+        node.name = "draggable"
+        self.tileMap.addChild(node)
+        
+        
+        self.pieces.append(Piece(node: node, xOrigin: x, yOrigin: y, color: colorPiece))
     }
     
     func removePiece(from origin: Piece) {
@@ -101,7 +112,7 @@ class GameScene: SKScene {
     }
     
     func addBoard() {
-        let whiteTexture = SKTexture(imageNamed: "cell")
+        let whiteTexture = SKTexture(imageNamed: "regia")
         let whiteTile = SKTileDefinition(texture: whiteTexture)
         let whiteTileGroup = SKTileGroup(tileDefinition: whiteTile)
         tileSet = SKTileSet(tileGroups: [whiteTileGroup], tileSetType: .grid)
@@ -228,10 +239,10 @@ extension GameScene {
     func animateNodes(_ node: SKNode, pos: PositionPiece, handle: () -> Void) {
         //for (index, node) in nodes.enumerated() {
             node.run(.sequence([
-                .wait(forDuration: 0.1),
+                .wait(forDuration: 0.01),
                 .sequence([
                     .scale(to: 1.5, duration: 0.3),
-                    .move(to: CGPoint(x: pos.x, y: pos.y), duration: 0.5),
+                    .move(to: CGPoint(x: pos.x, y: pos.y), duration: 0.2),
                     .scale(to: 1, duration: 0.3),
                     .wait(forDuration: 2)
                 ])
