@@ -57,10 +57,6 @@ class Service {
         self.socket.emit("newTurn", player)
     }
     
-    func exitPlayer(player: String) {
-        self.socket.emit("exitUser", player)
-    }
-    
     func enviaMensagem(nome: String, mensagem: String) {
         self.socket.emit("chatMessage", nome, mensagem)
     }
@@ -70,13 +66,13 @@ class Service {
     }
     
     func configuraSocket() {
-        socket.on("player") { [weak self] data, ack -> Void in
+        socket.on("player") { [weak self] data, ack in
             if let name = data[0] as? String {
                 if self?.player == nil {
                     self?.player = name
                     self?.delegate.yourPlayer(name)
                 }
-                self?.delegate.receivedMessage("🟢", msg: "Usuário: \(name)", data: "")
+                self?.delegate.receivedMessage("🟢", msg: "\(name) entrou", data: "")
             }
         }
         
@@ -85,13 +81,13 @@ class Service {
             self?.delegate.yourPlayer("")
         }
         
-        socket.on("uList") { [weak self] data, ack -> Void in
+        socket.on("uList") { [weak self] data, ack in
             if let name = data[0] as? String {
-                self?.delegate.receivedMessage("🟢", msg: "Usuário: \(name)", data: "")
+                self?.delegate.receivedMessage("🟢", msg: "Usuário \(name) se conectou", data: "")
             }
         }
         
-        socket.on("newChatMessage") { [weak self] data, ack -> Void in
+        socket.on("newChatMessage") { [weak self] data, ack in
             if let name = data[0] as? String, let msg = data[1] as? String, let data = data[2] as? String {
                 self?.delegate.receivedMessage(name, msg: msg, data: data)
             }
@@ -99,14 +95,13 @@ class Service {
         
         socket.on("playerMove") { [weak self] data, ack in
             if let name = data[0] as? String, let originX = data[1] as? Double, let originY = data[2] as? Double, let newX = data[3] as? Double, let newY = data[4] as? Double {
-                //self?.delegate.playerDidMove(name, from: Index(row: originX, column: originY), to: Index(row: newX, column: newY))
                 self?.delegate.playerDidMove(name, from: PositionPiece(x: originX, y: originY), to: PositionPiece(x: newX, y: newY))
             }
         }
         
         socket.on("startGame") { [weak self] data, ack in
             self?.delegate.didStart()
-            return
+            self?.delegate.receivedMessage("🔹", msg: "Game Start!", data: "")
         }
         
         socket.on("currentTurn") { [weak self] data, ack in
@@ -122,6 +117,17 @@ class Service {
         socket.on("lose") { [weak self] data, ack in
             self?.delegate.didLose()
         }
+        
+//        socket.on("surrender") { [weak self] data, ack in
+//            if let name = data[0] as? String {
+//                if name == self?.player {
+//                    self?.delegate.didLose()
+//                } else {
+//                    self?.delegate.didWin()
+//                }
+//
+//            }
+//        }
         
         socket.onAny {
             print("Got event: \($0.event), with items: \($0.items!)")

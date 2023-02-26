@@ -93,7 +93,7 @@ class GameViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //self.service.conectaPlayer()
+        showStateView()
     }
     
     @IBAction func enviaMensagem(_ sender: Any) {
@@ -165,6 +165,7 @@ extension GameViewController: ServiceDelegate {
     }
     
     func didWin() {
+        textos.removeAll()
         let alert = UIAlertController(title: "You Win", message: "", preferredStyle: .alert)
         let exit = UIAlertAction(title: "Play Again", style: .default, handler: { _ in self.restart() })
         alert.addAction(exit)
@@ -172,6 +173,7 @@ extension GameViewController: ServiceDelegate {
     }
     
     func didLose() {
+        textos.removeAll()
         let alert = UIAlertController(title: "You Lose", message: "", preferredStyle: .alert)
         let exit = UIAlertAction(title: "Play Again", style: .default, handler: { _ in self.restart() })
         alert.addAction(exit)
