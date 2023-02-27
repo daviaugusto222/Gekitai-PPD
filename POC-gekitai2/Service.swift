@@ -77,7 +77,7 @@ class Service {
         }
         
         socket.on(clientEvent: .disconnect) { [weak self] data, ack in
-            self?.player = ""
+            self?.player = nil
             self?.delegate.yourPlayer("")
         }
         
@@ -118,16 +118,6 @@ class Service {
             self?.delegate.didLose()
         }
         
-//        socket.on("surrender") { [weak self] data, ack in
-//            if let name = data[0] as? String {
-//                if name == self?.player {
-//                    self?.delegate.didLose()
-//                } else {
-//                    self?.delegate.didWin()
-//                }
-//
-//            }
-//        }
         
         socket.onAny {
             print("Got event: \($0.event), with items: \($0.items!)")

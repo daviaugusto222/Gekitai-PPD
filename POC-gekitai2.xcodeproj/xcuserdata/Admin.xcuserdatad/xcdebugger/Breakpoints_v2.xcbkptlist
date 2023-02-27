@@ -87,22 +87,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0AF92B04-014E-49F3-8268-7DBBDA543671"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "POC-gekitai2/Service.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
-            landmarkName = "configuraSocket()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "DAB0B4C1-7D28-4A58-B72F-0922E98BB60D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -148,7 +132,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "A46050AC-FCCE-424B-9A5D-28083CA41977 - a3f062957e694ced"
+                  uuid = "A46050AC-FCCE-424B-9A5D-28083CA41977 - a3f062957e694b42"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -158,12 +142,12 @@
                   urlString = "file:///Users/Admin/Documents/Projetos/POC-gekitai2/POC-gekitai2/GameScene.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "125"
-                  endingLineNumber = "125"
+                  startingLineNumber = "136"
+                  endingLineNumber = "136"
                   offsetFromSymbolStart = "167">
                </Location>
                <Location
-                  uuid = "A46050AC-FCCE-424B-9A5D-28083CA41977 - a3f062957e694ced"
+                  uuid = "A46050AC-FCCE-424B-9A5D-28083CA41977 - a3f062957e694b42"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -173,8 +157,8 @@
                   urlString = "file:///Users/Admin/Documents/Projetos/POC-gekitai2/POC-gekitai2/GameScene.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "125"
-                  endingLineNumber = "125"
+                  startingLineNumber = "136"
+                  endingLineNumber = "136"
                   offsetFromSymbolStart = "258">
                </Location>
             </Locations>
