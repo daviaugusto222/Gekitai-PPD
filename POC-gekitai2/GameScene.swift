@@ -134,10 +134,8 @@ class GameScene: SKScene {
     
     func movePiece(originPos: PositionPiece, newPos: PositionPiece) {
         if let piece = findPiece(from: originPos) {
-            animateNodes(piece.node, pos: newPos) {
-                piece.node.position = CGPoint(x: originPos.x, y: originPos.y)
-            }
-            
+            //animateNodes(piece.node, pos: newPos)
+            piece.node.position = CGPoint(x: newPos.x, y: newPos.y)
         }
         
 //
@@ -236,7 +234,7 @@ class GameScene: SKScene {
 
 
 extension GameScene {
-    func animateNodes(_ node: SKNode, pos: PositionPiece, handle: () -> Void) {
+    func animateNodes(_ node: SKNode, pos: PositionPiece) {
         //for (index, node) in nodes.enumerated() {
             node.run(.sequence([
                 .wait(forDuration: 0.01),
@@ -247,7 +245,6 @@ extension GameScene {
                     .wait(forDuration: 2)
                 ])
             ]))
-        handle()
-        //}
+//        }
     }
 }
