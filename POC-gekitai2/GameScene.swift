@@ -138,7 +138,7 @@ class GameScene: SKScene {
             piece.node.position = CGPoint(x: newPos.x, y: newPos.y)
         }
         
-//
+//          Moviventação complexa porém desnecessária
 //        let pieceOrigin = findPiece(from: originPos)
 //
 //        guard let piece = pieceOrigin else { return }

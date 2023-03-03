@@ -28,23 +28,27 @@ enum Player: String {
 }
 
 enum GameState: String {
-    case awaitingConnection = "Awaiting Connection from another Player"
-    case waiting = "Waiting for the Opponent's Move"
-    case yourTurn = "Make your Move!"
-    case youWin = "You Win!"
-    case youLose = "You Lose!"
+    case awaiting = "Aguardando jogador..."
+    case waiting = "Oponente jogando..."
+    case yourTurn = "Agora é sua vez!"
 }
 
 class GameViewController: UIViewController {
-    
     @IBOutlet weak var skview: SKView!
     @IBOutlet weak var table: UITableView!
     @IBOutlet weak var textfield: UITextField!
+    @IBOutlet weak var finalizarTurnoButton: UIButton!
+    @IBOutlet weak var stateLabel: UILabel!
     
     let service: Service = Service()
     var textos = [Mensagem]() {
         didSet {
             table.reloadData()
+            if !textos.isEmpty {
+                table.layoutIfNeeded()
+                table.scrollToRow(at: IndexPath(row: textos.count - 1, section: 0), at: .bottom, animated: true)
+            }
+            
         }
     }
     
@@ -56,17 +60,20 @@ class GameViewController: UIViewController {
     
     lazy var stateView: UIView = {
         let view = UIView(frame: self.skview.frame)
-        view.backgroundColor = UIColor.init(white: 0, alpha: 0.5)
+        view.backgroundColor = UIColor.init(white: 0, alpha: 0.3)
         return view
     }()
     
-    var state: GameState! = .awaitingConnection {
+    var state: GameState! = .awaiting {
         didSet {
+            self.stateLabel.text = state.rawValue
             switch state {
             case .yourTurn:
                 dismissStateView()
+                finalizarTurnoButton.isEnabled = true
             default:
                 showStateView()
+                finalizarTurnoButton.isEnabled = false
             }
         }
     }
@@ -78,16 +85,18 @@ class GameViewController: UIViewController {
         table.dataSource = self
         table.delegate = self
         service.delegate = self
+        textfield.delegate = self
         
         if let scene = GKScene(fileNamed: "GameScene"), let scene = scene.rootNode as! GameScene? {
             scene.scaleMode = .aspectFill
-
             skview.presentScene(scene)
         }
         
         skview.ignoresSiblingOrder = true
-        skview.showsFPS = true
-        skview.showsNodeCount = true
+        skview.showsFPS = false
+        skview.showsNodeCount = false
+        
+        self.table.layer.cornerRadius = 10.0
         
     }
     
@@ -96,9 +105,18 @@ class GameViewController: UIViewController {
         showStateView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+         
+    }
+    
     @IBAction func enviaMensagem(_ sender: Any) {
-        service.enviaMensagem(nome: player.rawValue, mensagem: textfield.text ?? "nada")
-        self.textfield.text?.removeAll()
+        guard let mensagem = textfield.text else { return }
+        if mensagem != "" {
+            service.enviaMensagem(nome: player.rawValue, mensagem: mensagem)
+            self.textfield.text?.removeAll()
+        }
     }
     
     @IBAction func finalizarTurno(_ sender: Any) {
@@ -145,14 +163,19 @@ extension GameViewController: UITableViewDataSource, UITableViewDelegate {
         // Reuse or create a cell.
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableCell
         // For a standard cell, use the UITableViewCell properties.
-        cell.nome.text = textos[indexPath.row].nome
+        if textos[indexPath.row].nome == "playerBottom" {
+            cell.nome.text = "🟣 Roxos"
+        } else if textos[indexPath.row].nome == "playerTop" {
+            cell.nome.text = "🔴 Vermelhos"
+        } else {
+            cell.nome.text = textos[indexPath.row].nome
+        }
         cell.mensagem.text = textos[indexPath.row].msg
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "MMM dd, HH:mm"
-        //cell.data.text = dateFormatterPrint.string(from: textos[indexPath.row].data)
         cell.data.text = textos[indexPath.row].data
         return cell
     }
+
+
 }
 
 extension GameViewController: ServiceDelegate {
@@ -196,11 +219,27 @@ extension GameViewController: ServiceDelegate {
     }
     
     func playerDidMove(_ name: String, from originIndex: PositionPiece, to newIndex: PositionPiece) {
-        print("ALGO SE MOVEU \(originIndex) -> \(newIndex)")
         gameScene.movePiece(originPos: originIndex, newPos: newIndex)
     }
     
     func receivedMessage(_ name: String, msg: String, data: String) {
         textos.append(Mensagem(nome: name, msg: msg, data: data))
+    }
+}
+
+extension GameViewController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // get the current text, or use an empty string if that failed
+           let currentText = textField.text ?? ""
+
+           // attempt to read the range they are trying to change, or exit if we can't
+           guard let stringRange = Range(range, in: currentText) else { return false }
+
+           // add their new text to the existing text
+           let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+
+           // make sure the result is under 16 characters
+           return updatedText.count <= 20
     }
 }

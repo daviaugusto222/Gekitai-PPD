@@ -71,9 +71,17 @@ class Service {
                 if self?.player == nil {
                     self?.player = name
                     self?.delegate.yourPlayer(name)
+                    self?.delegate.receivedMessage(name == "playerBottom" ? "🟣" : "🔴", msg: "Sapinhos \(name == "playerTop" ? "Vermelhos": "Roxos")", data: "Jogador entrou")
+                } else {
+                    self?.delegate.receivedMessage(name == "playerBottom" ? "🟣" : "🔴", msg: "Sapinhos \(name == "playerTop" ? "Vermelhos": "Roxos")", data: "Jogador entrou")
                 }
-                self?.delegate.receivedMessage("🟢", msg: "\(name) entrou", data: "")
+                
             }
+        }
+        
+        socket.on("startGame") { [weak self] data, ack in
+            self?.delegate.didStart()
+            self?.delegate.receivedMessage("🔹", msg: "Game Start!", data: "")
         }
         
         socket.on(clientEvent: .disconnect) { [weak self] data, ack in
@@ -99,10 +107,7 @@ class Service {
             }
         }
         
-        socket.on("startGame") { [weak self] data, ack in
-            self?.delegate.didStart()
-            self?.delegate.receivedMessage("🔹", msg: "Game Start!", data: "")
-        }
+
         
         socket.on("currentTurn") { [weak self] data, ack in
             if let name = data[0] as? String {
