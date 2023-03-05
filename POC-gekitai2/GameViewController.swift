@@ -189,16 +189,16 @@ extension GameViewController: ServiceDelegate {
     
     func didWin() {
         textos.removeAll()
-        let alert = UIAlertController(title: "You Win", message: "", preferredStyle: .alert)
-        let exit = UIAlertAction(title: "Play Again", style: .default, handler: { _ in self.restart() })
+        let alert = UIAlertController(title: "Você Ganhou! 🎉", message: "", preferredStyle: .alert)
+        let exit = UIAlertAction(title: "Jogar novamente", style: .default, handler: { _ in self.restart() })
         alert.addAction(exit)
         self.present(alert, animated: true, completion: nil)
     }
     
     func didLose() {
         textos.removeAll()
-        let alert = UIAlertController(title: "You Lose", message: "", preferredStyle: .alert)
-        let exit = UIAlertAction(title: "Play Again", style: .default, handler: { _ in self.restart() })
+        let alert = UIAlertController(title: "Você Perdeu! 😭", message: "", preferredStyle: .alert)
+        let exit = UIAlertAction(title: "Jogar novamente", style: .default, handler: { _ in self.restart() })
         alert.addAction(exit)
         self.present(alert, animated: true, completion: nil)
     }
