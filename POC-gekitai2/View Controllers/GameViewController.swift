@@ -36,9 +36,10 @@ class GameViewController: UIViewController {
         }
     }
     
-    var player: Player = .disconnected
-    let user = UserDefaults.standard.integer(forKey: "number")
     
+    let user = UserDefaults.standard.integer(forKey: "number")
+    var player: Player = .disconnected
+        
     var gameScene: GameScene {
         return skview.scene as! GameScene
     }
@@ -66,6 +67,12 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if user == 0 {
+            player = .playerBottom
+        } else if user == 1 {
+            player = .playerTop
+        }
         
         table.dataSource = self
         table.delegate = self
@@ -101,7 +108,7 @@ class GameViewController: UIViewController {
     @IBAction func enviaMensagem(_ sender: Any) {
         guard let mensagem = textfield.text else { return }
         if mensagem != "" {
-            let message = Mensagem(sender: player.hashValue, content: mensagem)
+            let message = Mensagem(sender: player.rawValue, content: mensagem)
             RPCManager.shared.client.send(message) { _ in
                 self.textos.append(message)
                 DispatchQueue.main.async {
@@ -162,7 +169,7 @@ extension GameViewController: UITableViewDataSource, UITableViewDelegate {
         // Reuse or create a cell.
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableCell
         // For a standard cell, use the UITableViewCell properties.
-        if textos[indexPath.row].sender == user {
+        if textos[indexPath.row].sender == "playerBottom" {
             cell.nome.text = "🟣 Roxos"
         } else {
             cell.nome.text = "🔴 Vermelhos"
@@ -201,7 +208,7 @@ extension GameViewController: ServiceDelegate {
     }
     
     func yourPlayer(_ team: String) {
-        player = Player(rawValue: team) ?? .disconnected
+        //player = Player(rawValue: team) ?? .disconnected
     }
     
     func newTurn(_ name: String) {
@@ -219,9 +226,8 @@ extension GameViewController: ServiceDelegate {
         gameScene.movePiece(originPos: originIndex, newPos: newIndex)
     }
     
-    func receivedMessage(_ name: Int, msg: String, data: String) {
-        
-        textos.append(Mensagem(sender: name, content: msg, data: data))
+    func receivedMessage(_ name: String, msg: String, data: String) {
+        //textos.append(Mensagem(sender: name, content: msg, data: data))
     }
 }
 

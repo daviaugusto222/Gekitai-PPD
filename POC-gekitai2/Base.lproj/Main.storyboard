@@ -215,7 +215,7 @@
                                         <rect key="frame" x="319" y="0.0" width="400" height="300"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="DwJ-Gd-jxR">
-                                                <rect key="frame" x="20" y="62" width="360" height="168"/>
+                                                <rect key="frame" x="20" y="80" width="360" height="123.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Se conecte com seu amigo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="olT-Mw-8qa">
                                                         <rect key="frame" x="0.0" y="0.0" width="360" height="34.5"/>
@@ -223,18 +223,13 @@
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Seu nome" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="t28-N8-q9r">
+                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Código do amigo" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Jnh-rS-ljA">
                                                         <rect key="frame" x="0.0" y="44.5" width="360" height="34.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits"/>
                                                     </textField>
-                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Código do amigo" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Jnh-rS-ljA">
-                                                        <rect key="frame" x="0.0" y="89" width="360" height="34.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits"/>
-                                                    </textField>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="03X-XS-PmX">
-                                                        <rect key="frame" x="0.0" y="133.5" width="360" height="34.5"/>
+                                                        <rect key="frame" x="0.0" y="89" width="360" height="34.5"/>
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="filled" title="Conectar"/>
                                                         <connections>
@@ -248,7 +243,7 @@
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="DwJ-Gd-jxR" secondAttribute="trailing" constant="20" id="Ebo-8I-4BE"/>
                                             <constraint firstItem="DwJ-Gd-jxR" firstAttribute="leading" secondItem="q9I-kR-Ghl" secondAttribute="leading" constant="20" id="JKv-ig-ggc"/>
-                                            <constraint firstItem="DwJ-Gd-jxR" firstAttribute="top" secondItem="q9I-kR-Ghl" secondAttribute="top" constant="62" id="UX3-Gg-M2d"/>
+                                            <constraint firstItem="DwJ-Gd-jxR" firstAttribute="top" secondItem="q9I-kR-Ghl" secondAttribute="top" constant="80" id="UX3-Gg-M2d"/>
                                             <constraint firstAttribute="width" constant="400" id="W9f-UN-cyb"/>
                                             <constraint firstAttribute="height" constant="300" id="w5h-PC-LAL"/>
                                         </constraints>
@@ -298,7 +293,6 @@
                     <connections>
                         <outlet property="codeRoomLabel" destination="t3a-gQ-Var" id="Uv7-Z1-r8n"/>
                         <outlet property="codeTextField" destination="Jnh-rS-ljA" id="Uxo-Fc-Tq0"/>
-                        <outlet property="nomeTextField" destination="t28-N8-q9r" id="fkj-pv-ywm"/>
                         <outlet property="startButton" destination="c9S-nM-YaS" id="Q2y-XV-cDW"/>
                     </connections>
                 </viewController>

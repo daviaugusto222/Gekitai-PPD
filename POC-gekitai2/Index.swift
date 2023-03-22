@@ -23,7 +23,7 @@ struct Move: Codable {
 }
 
 struct Mensagem: Codable {
-    var sender: Int
+    var sender: String
     var content: String
     var data: String?
 }

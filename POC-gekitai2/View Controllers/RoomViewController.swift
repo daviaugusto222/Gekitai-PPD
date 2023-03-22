@@ -10,7 +10,6 @@ import UIKit
 class RoomViewController: UIViewController {
     
     @IBOutlet weak var codeRoomLabel: UILabel!
-    @IBOutlet weak var nomeTextField: UITextField!
     @IBOutlet weak var codeTextField: UITextField!
     @IBOutlet weak var startButton: UIButton!
     
@@ -41,7 +40,6 @@ class RoomViewController: UIViewController {
         RPCManager.shared.client.invite(name: name) { (success) in
             if success {
                 UserDefaults.standard.set(name, forKey: "name")
-                nomeTextField.isEnabled = false
                 codeTextField.isEnabled = false
                 sender.backgroundColor = .systemGreen
                 sender.setTitle("CONECTADO", for: .normal)
@@ -70,10 +68,12 @@ class RoomViewController: UIViewController {
             let chat = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "game-kaeru") as! GameViewController
             
             chat.view.frame = self.view.bounds
+            
             self.view.addSubview(chat.view)
             
             UIView.transition(from: self.view, to: chat.view, duration: 0.25, options: .transitionCrossDissolve) { _ in
                 chat.didMove(toParent: self)
+                chat.didStart()
                 
             }
             

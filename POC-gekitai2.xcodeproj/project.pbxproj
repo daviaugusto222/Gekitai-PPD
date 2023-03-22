@@ -22,12 +22,12 @@
 		CE50C31829C744A300804457 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = CE50C31729C744A300804457 /* protoc-gen-grpc-swift */; };
 		CE50C31A29C7452F00804457 /* Game.proto in Sources */ = {isa = PBXBuildFile; fileRef = CE50C31929C7452F00804457 /* Game.proto */; };
 		CE50C32029C749C100804457 /* RPCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C31F29C749C100804457 /* RPCManager.swift */; };
-		CE50C32529C9E72600804457 /* Game.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32329C9E72600804457 /* Game.grpc.swift */; };
-		CE50C32629C9E72600804457 /* Game.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32429C9E72600804457 /* Game.pb.swift */; };
 		CE50C32829C9E81200804457 /* GekitaiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32729C9E81200804457 /* GekitaiProvider.swift */; };
 		CE50C32A29C9E96000804457 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32929C9E96000804457 /* Server.swift */; };
 		CE50C32C29C9E96800804457 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32B29C9E96800804457 /* Client.swift */; };
 		CE50C32E29CA100200804457 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32D29CA100200804457 /* RoomViewController.swift */; };
+		CE50C33229CB40BA00804457 /* Game.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C33029CB40BA00804457 /* Game.pb.swift */; };
+		CE50C33329CB40BA00804457 /* Game.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C33129CB40BA00804457 /* Game.grpc.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,12 +44,12 @@
 		84AB58E6299C4D5400524265 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE50C31929C7452F00804457 /* Game.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.protobuf; path = Game.proto; sourceTree = "<group>"; };
 		CE50C31F29C749C100804457 /* RPCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPCManager.swift; sourceTree = "<group>"; };
-		CE50C32329C9E72600804457 /* Game.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.grpc.swift; sourceTree = "<group>"; };
-		CE50C32429C9E72600804457 /* Game.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.pb.swift; sourceTree = "<group>"; };
 		CE50C32729C9E81200804457 /* GekitaiProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GekitaiProvider.swift; sourceTree = "<group>"; };
 		CE50C32929C9E96000804457 /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		CE50C32B29C9E96800804457 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		CE50C32D29CA100200804457 /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
+		CE50C33029CB40BA00804457 /* Game.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.pb.swift; sourceTree = "<group>"; };
+		CE50C33129CB40BA00804457 /* Game.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.grpc.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,8 +103,8 @@
 		CE50C31129C7447500804457 /* gRPC */ = {
 			isa = PBXGroup;
 			children = (
-				CE50C32329C9E72600804457 /* Game.grpc.swift */,
-				CE50C32429C9E72600804457 /* Game.pb.swift */,
+				CE50C33129CB40BA00804457 /* Game.grpc.swift */,
+				CE50C33029CB40BA00804457 /* Game.pb.swift */,
 				CE50C31929C7452F00804457 /* Game.proto */,
 				CE50C31F29C749C100804457 /* RPCManager.swift */,
 				CE50C32929C9E96000804457 /* Server.swift */,
@@ -204,14 +204,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE50C32629C9E72600804457 /* Game.pb.swift in Sources */,
 				84AB58DD299C4D4F00524265 /* GameScene.swift in Sources */,
 				CE50C32E29CA100200804457 /* RoomViewController.swift in Sources */,
+				CE50C33329CB40BA00804457 /* Game.grpc.swift in Sources */,
 				CE50C32C29C9E96800804457 /* Client.swift in Sources */,
 				845707D929A7EF15001D3115 /* ServiceDelegate.swift in Sources */,
 				CE50C32829C9E81200804457 /* GekitaiProvider.swift in Sources */,
 				84AB58DF299C4D4F00524265 /* GameViewController.swift in Sources */,
-				CE50C32529C9E72600804457 /* Game.grpc.swift in Sources */,
+				CE50C33229CB40BA00804457 /* Game.pb.swift in Sources */,
 				CE50C32A29C9E96000804457 /* Server.swift in Sources */,
 				84AB58D7299C4D4F00524265 /* AppDelegate.swift in Sources */,
 				CE50C31A29C7452F00804457 /* Game.proto in Sources */,

@@ -9,10 +9,10 @@ import Foundation
 
 protocol ServiceDelegate: AnyObject {
     func didStart()
-    func yourPlayer(_ team: Int)
-    func newTurn(_ name: Int)
+    func yourPlayer(_ team: String)
+    func newTurn(_ name: String)
     func playerDidMove(_ name: String, from originIndex: PositionPiece , to newIndex: PositionPiece)
-    func receivedMessage(_ name: Int, msg: String, data: String)
+    func receivedMessage(_ name: String, msg: String, data: String)
     func didWin()
     func didLose()
 }
