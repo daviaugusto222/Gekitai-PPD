@@ -52,15 +52,18 @@ class GameViewController: UIViewController {
     
     var state: GameState! = .awaiting {
         didSet {
-            self.stateLabel.text = state.rawValue
-            switch state {
-            case .yourTurn:
-                dismissStateView()
-                finalizarTurnoButton.isEnabled = true
-            default:
-                showStateView()
-                finalizarTurnoButton.isEnabled = false
+            DispatchQueue.main.async {
+                self.stateLabel.text = self.state.rawValue
+                switch self.state {
+                case .yourTurn:
+                    self.dismissStateView()
+                    self.finalizarTurnoButton.isEnabled = true
+                default:
+                    self.showStateView()
+                    self.finalizarTurnoButton.isEnabled = false
+                }
             }
+            
         }
     }
     
@@ -102,6 +105,24 @@ class GameViewController: UIViewController {
                 self.table.reloadData()
             }
         }
+        
+        RPCManager.shared.onMove {
+            self.gameScene.movePiece(originPos: $0.from, newPos: $0.to)
+            self.state = .yourTurn
+            
+        }
+        
+        RPCManager.shared.onRestart {
+            DispatchQueue.main.async {
+                let join = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "roomIdentify")
+                join.view.frame = self.view.bounds
+                self.view.addSubview(join.view)
+                UIView.transition(from: self.view, to: join.view, duration: 0.25, options: .transitionCrossDissolve) { _ in
+                    join.didMove(toParent: self)
+                }
+            }
+        }
+        
     }
     
     
@@ -125,16 +146,23 @@ class GameViewController: UIViewController {
         for move in gameScene.movesPices {
             //self.service.move(from: move.previousPos, to: move.newPos)
             //self.grpcClient.move(from: move.previousPos, to: move.newPos)
+            RPCManager.shared.client.send(move) { _ in
+            }
         }
         //self.service.newTurn()
-        //self.grpcClient.newTurn()
+        self.gameScene.newPos = nil
+        self.gameScene.previousPos = nil
+        self.gameScene.movesPices = []
+        state = .waiting
         
     }
     
+
+    
     @IBAction func desistir(_ sender: Any) {
         let alert = UIAlertController(title: "Desistir", message: "Você realmente deseja desistir?", preferredStyle: .alert)
-        //let exit = UIAlertAction(title: "Desistir", style: .destructive, handler: { _ in self.grpcClient.surreder() })
-        //alert.addAction(exit)
+        let exit = UIAlertAction(title: "Desistir", style: .destructive, handler: { _ in self.restart() })
+        alert.addAction(exit)
         alert.addAction(.init(title: "Voltar", style: .cancel, handler: .none))
         self.present(alert, animated: true, completion: nil)
     }
@@ -143,16 +171,27 @@ class GameViewController: UIViewController {
     func restart() {
         //service.restart()
         //grpcClient.restart()
-        viewDidLoad()
-        viewDidAppear(true)
+        RPCManager.shared.client.restart{ _ in }
+        DispatchQueue.main.async {
+            let join = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "roomIdentify")
+            join.view.frame = self.view.bounds
+            self.view.addSubview(join.view)
+            UIView.transition(from: self.view, to: join.view, duration: 0.25, options: .transitionCrossDissolve) { _ in
+                join.didMove(toParent: self)
+            }
+        }
     }
     
     func showStateView() {
-        self.view.addSubview(stateView)
+        DispatchQueue.main.async {
+            self.view.addSubview(self.stateView)
+        }
     }
     
     func dismissStateView() {
-        stateView.removeFromSuperview()
+        DispatchQueue.main.async {
+            self.stateView.removeFromSuperview()
+        }
     }
 }
 

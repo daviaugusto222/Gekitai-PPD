@@ -63,13 +63,13 @@ message MoveRequest {
     TO to = 2;
 
     message FROM {
-        int32 row = 3;
-        int32 column = 4;
+        double row = 3;
+        double column = 4;
     }
     
     message TO {
-        int32 row = 5;
-        int32 column = 6;
+        double row = 5;
+        double column = 6;
     }
 
 }

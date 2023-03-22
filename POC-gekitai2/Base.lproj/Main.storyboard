@@ -173,7 +173,7 @@
         <!--Room View Controller-->
         <scene sceneID="nQi-Jl-tqA">
             <objects>
-                <viewController id="loV-Qd-Vao" customClass="RoomViewController" customModule="Kaeru_Gekitai" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="roomIdentify" id="loV-Qd-Vao" customClass="RoomViewController" customModule="Kaeru_Gekitai" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Uye-9t-FSt">
                         <rect key="frame" x="0.0" y="0.0" width="1080" height="810"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

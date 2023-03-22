@@ -41,31 +41,33 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         
         
-        originYellowPositions = [PositionPiece(x: 140.0, y: 120.0),
-                                 PositionPiece(x: 200.0, y: 120.0),
-                                 PositionPiece(x: 260.0, y: 120.0),
-                                 PositionPiece(x: 320.0, y: 120.0),
-                                 PositionPiece(x: 380.0, y: 120.0),
-                                 PositionPiece(x: 440.0, y: 120.0),
-                                 PositionPiece(x: 500.0, y: 120.0),
-                                 PositionPiece(x: 560.0, y: 120.0)]
         
-        originBluePositions = [PositionPiece(x: 140.0, y: 680.0),
-                               PositionPiece(x: 200.0, y: 680.0),
-                               PositionPiece(x: 260.0, y: 680.0),
-                               PositionPiece(x: 320.0, y: 680.0),
-                               PositionPiece(x: 380.0, y: 680.0),
-                               PositionPiece(x: 440.0, y: 680.0),
-                               PositionPiece(x: 500.0, y: 680.0),
-                               PositionPiece(x: 560.0, y: 680.0)]
+        
+        originYellowPositions = [PositionPiece(row: 140.0, column: 120.0),
+                                 PositionPiece(row: 200.0, column: 120.0),
+                                 PositionPiece(row: 260.0, column: 120.0),
+                                 PositionPiece(row: 320.0, column: 120.0),
+                                 PositionPiece(row: 380.0, column: 120.0),
+                                 PositionPiece(row: 440.0, column: 120.0),
+                                 PositionPiece(row: 500.0, column: 120.0),
+                                 PositionPiece(row: 560.0, column: 120.0)]
+        
+        originBluePositions = [PositionPiece(row: 140.0, column: 680.0),
+                               PositionPiece(row: 200.0, column: 680.0),
+                               PositionPiece(row: 260.0, column: 680.0),
+                               PositionPiece(row: 320.0, column: 680.0),
+                               PositionPiece(row: 380.0, column: 680.0),
+                               PositionPiece(row: 440.0, column: 680.0),
+                               PositionPiece(row: 500.0, column: 680.0),
+                               PositionPiece(row: 560.0, column: 680.0)]
         
         addBoard()
         
         for pos in originYellowPositions {
-            addPiece(x: pos.x, y: pos.y, .yellow)
+            addPiece(x: pos.row, y: pos.column, .yellow)
         }
         for pos in originBluePositions {
-            addPiece(x: pos.x, y: pos.y, .blue)
+            addPiece(x: pos.row, y: pos.column, .blue)
         }
     }
     
@@ -106,7 +108,7 @@ class GameScene: SKScene {
     
     func findPiece(from pos: PositionPiece) -> Piece? {
         // buscar piece que ta no index (no pieces)
-        for piece in pieces where piece.node.position.x == pos.x && piece.node.position.y == pos.y {
+        for piece in pieces where piece.node.position.x == pos.row && piece.node.position.y == pos.column {
             return piece
         }
         return nil
@@ -136,7 +138,7 @@ class GameScene: SKScene {
     func movePiece(originPos: PositionPiece, newPos: PositionPiece) {
         if let piece = findPiece(from: originPos) {
             //animateNodes(piece.node, pos: newPos)
-            piece.node.position = CGPoint(x: newPos.x, y: newPos.y)
+            piece.node.position = CGPoint(x: newPos.row, y: newPos.column)
         }
         
 //          Moviventação complexa porém desnecessária
@@ -174,7 +176,7 @@ class GameScene: SKScene {
             for node in touchedNodes.reversed() {
                 if node.name == "draggable" {
                     self.currentNode = node
-                    self.previousPos = PositionPiece(x: node.position.x, y: node.position.y)
+                    self.previousPos = PositionPiece(row: node.position.x, column: node.position.y)
                 }
             }
         }
@@ -204,23 +206,23 @@ class GameScene: SKScene {
                 if column < 0 || column > 5 || row < 0 || row > 5 {
                     for piece in pieces where piece.node == node {
                         node.position = CGPoint(x: piece.xOrigin, y: piece.yOrigin)
-                        self.newPos = PositionPiece(x: piece.xOrigin, y: piece.yOrigin)
+                        self.newPos = PositionPiece(row: piece.xOrigin, column: piece.yOrigin)
                     }
                 } else {
                     // se existir mais que um node na posição, volta para a posição anterior
                     if nodesInCenter.count > 1 && nodesInCenter.contains(node) {
-                        node.position = CGPoint(x: previousPos!.x, y: previousPos!.y)
-                        self.newPos = PositionPiece(x: previousPos!.x, y: previousPos!.y)
+                        node.position = CGPoint(x: previousPos!.row, y: previousPos!.column)
+                        self.newPos = PositionPiece(row: previousPos!.row, column: previousPos!.column)
                     } else if nodesInCenter.count >= 1 && !nodesInCenter.contains(node) {
-                        node.position = CGPoint(x: previousPos!.x, y: previousPos!.y)
-                        self.newPos = PositionPiece(x: previousPos!.x, y: previousPos!.y)
+                        node.position = CGPoint(x: previousPos!.row, y: previousPos!.column)
+                        self.newPos = PositionPiece(row: previousPos!.row, column: previousPos!.column)
                     
                     } else {
                         node.position = center
-                        self.newPos = PositionPiece(x: center.x, y: center.y)
+                        self.newPos = PositionPiece(row: center.x, column: center.y)
                     }
                 }
-            movesPices.append(Move(previousPos: self.previousPos!, newPos: self.newPos!)) 
+            movesPices.append(Move(from: self.previousPos!, to: self.newPos!)) 
         }
         //Finaliza a movimentação do drag and drop
         self.currentNode = nil
@@ -241,7 +243,7 @@ extension GameScene {
                 .wait(forDuration: 0.01),
                 .sequence([
                     .scale(to: 1.5, duration: 0.3),
-                    .move(to: CGPoint(x: pos.x, y: pos.y), duration: 0.2),
+                    .move(to: CGPoint(x: pos.row, y: pos.column), duration: 0.2),
                     .scale(to: 1, duration: 0.3),
                     .wait(forDuration: 2)
                 ])
