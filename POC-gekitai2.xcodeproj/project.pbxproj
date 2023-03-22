@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		845707D729A7EEC1001D3115 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 845707D629A7EEC1001D3115 /* SocketIO */; };
-		845707D929A7EF15001D3115 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845707D829A7EF15001D3115 /* Service.swift */; };
+		845707D929A7EF15001D3115 /* ServiceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845707D829A7EF15001D3115 /* ServiceDelegate.swift */; };
 		845707DB29A8E525001D3115 /* Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845707DA29A8E525001D3115 /* Index.swift */; };
 		84AB58D7299C4D4F00524265 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AB58D6299C4D4F00524265 /* AppDelegate.swift */; };
 		84AB58D9299C4D4F00524265 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 84AB58D8299C4D4F00524265 /* GameScene.sks */; };
@@ -18,10 +17,21 @@
 		84AB58E2299C4D4F00524265 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84AB58E0299C4D4F00524265 /* Main.storyboard */; };
 		84AB58E4299C4D5400524265 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84AB58E3299C4D5400524265 /* Assets.xcassets */; };
 		84AB58E7299C4D5400524265 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84AB58E5299C4D5400524265 /* LaunchScreen.storyboard */; };
+		CE50C31429C744A300804457 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = CE50C31329C744A300804457 /* CGRPCZlib */; };
+		CE50C31629C744A300804457 /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = CE50C31529C744A300804457 /* GRPC */; };
+		CE50C31829C744A300804457 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = CE50C31729C744A300804457 /* protoc-gen-grpc-swift */; };
+		CE50C31A29C7452F00804457 /* Game.proto in Sources */ = {isa = PBXBuildFile; fileRef = CE50C31929C7452F00804457 /* Game.proto */; };
+		CE50C32029C749C100804457 /* RPCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C31F29C749C100804457 /* RPCManager.swift */; };
+		CE50C32529C9E72600804457 /* Game.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32329C9E72600804457 /* Game.grpc.swift */; };
+		CE50C32629C9E72600804457 /* Game.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32429C9E72600804457 /* Game.pb.swift */; };
+		CE50C32829C9E81200804457 /* GekitaiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32729C9E81200804457 /* GekitaiProvider.swift */; };
+		CE50C32A29C9E96000804457 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32929C9E96000804457 /* Server.swift */; };
+		CE50C32C29C9E96800804457 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32B29C9E96800804457 /* Client.swift */; };
+		CE50C32E29CA100200804457 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE50C32D29CA100200804457 /* RoomViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		845707D829A7EF15001D3115 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		845707D829A7EF15001D3115 /* ServiceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceDelegate.swift; sourceTree = "<group>"; };
 		845707DA29A8E525001D3115 /* Index.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Index.swift; sourceTree = "<group>"; };
 		84AB58D3299C4D4F00524265 /* Kaeru Gekitai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kaeru Gekitai.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84AB58D6299C4D4F00524265 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -32,6 +42,14 @@
 		84AB58E1299C4D4F00524265 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		84AB58E3299C4D5400524265 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84AB58E6299C4D5400524265 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CE50C31929C7452F00804457 /* Game.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.protobuf; path = Game.proto; sourceTree = "<group>"; };
+		CE50C31F29C749C100804457 /* RPCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPCManager.swift; sourceTree = "<group>"; };
+		CE50C32329C9E72600804457 /* Game.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.grpc.swift; sourceTree = "<group>"; };
+		CE50C32429C9E72600804457 /* Game.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.pb.swift; sourceTree = "<group>"; };
+		CE50C32729C9E81200804457 /* GekitaiProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GekitaiProvider.swift; sourceTree = "<group>"; };
+		CE50C32929C9E96000804457 /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		CE50C32B29C9E96800804457 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		CE50C32D29CA100200804457 /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +57,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				845707D729A7EEC1001D3115 /* SocketIO in Frameworks */,
+				CE50C31629C744A300804457 /* GRPC in Frameworks */,
+				CE50C31429C744A300804457 /* CGRPCZlib in Frameworks */,
+				CE50C31829C744A300804457 /* protoc-gen-grpc-swift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,18 +85,42 @@
 		84AB58D5299C4D4F00524265 /* POC-gekitai2 */ = {
 			isa = PBXGroup;
 			children = (
+				CE50C31129C7447500804457 /* gRPC */,
+				845707D829A7EF15001D3115 /* ServiceDelegate.swift */,
+				845707DA29A8E525001D3115 /* Index.swift */,
+				CE50C32F29CA100A00804457 /* View Controllers */,
 				84AB58D6299C4D4F00524265 /* AppDelegate.swift */,
+				84AB58DC299C4D4F00524265 /* GameScene.swift */,
 				84AB58D8299C4D4F00524265 /* GameScene.sks */,
 				84AB58DA299C4D4F00524265 /* Actions.sks */,
-				84AB58DC299C4D4F00524265 /* GameScene.swift */,
-				84AB58DE299C4D4F00524265 /* GameViewController.swift */,
-				845707D829A7EF15001D3115 /* Service.swift */,
-				845707DA29A8E525001D3115 /* Index.swift */,
 				84AB58E0299C4D4F00524265 /* Main.storyboard */,
-				84AB58E3299C4D5400524265 /* Assets.xcassets */,
 				84AB58E5299C4D5400524265 /* LaunchScreen.storyboard */,
+				84AB58E3299C4D5400524265 /* Assets.xcassets */,
 			);
 			path = "POC-gekitai2";
+			sourceTree = "<group>";
+		};
+		CE50C31129C7447500804457 /* gRPC */ = {
+			isa = PBXGroup;
+			children = (
+				CE50C32329C9E72600804457 /* Game.grpc.swift */,
+				CE50C32429C9E72600804457 /* Game.pb.swift */,
+				CE50C31929C7452F00804457 /* Game.proto */,
+				CE50C31F29C749C100804457 /* RPCManager.swift */,
+				CE50C32929C9E96000804457 /* Server.swift */,
+				CE50C32B29C9E96800804457 /* Client.swift */,
+				CE50C32729C9E81200804457 /* GekitaiProvider.swift */,
+			);
+			path = gRPC;
+			sourceTree = "<group>";
+		};
+		CE50C32F29CA100A00804457 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				84AB58DE299C4D4F00524265 /* GameViewController.swift */,
+				CE50C32D29CA100200804457 /* RoomViewController.swift */,
+			);
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -96,7 +140,9 @@
 			);
 			name = "POC-gekitai2";
 			packageProductDependencies = (
-				845707D629A7EEC1001D3115 /* SocketIO */,
+				CE50C31329C744A300804457 /* CGRPCZlib */,
+				CE50C31529C744A300804457 /* GRPC */,
+				CE50C31729C744A300804457 /* protoc-gen-grpc-swift */,
 			);
 			productName = "POC-gekitai2";
 			productReference = 84AB58D3299C4D4F00524265 /* Kaeru Gekitai.app */;
@@ -127,7 +173,7 @@
 			);
 			mainGroup = 84AB58CA299C4D4F00524265;
 			packageReferences = (
-				845707D529A7EEC1001D3115 /* XCRemoteSwiftPackageReference "socket" */,
+				CE50C31229C744A300804457 /* XCRemoteSwiftPackageReference "grpc-swift" */,
 			);
 			productRefGroup = 84AB58D4299C4D4F00524265 /* Products */;
 			projectDirPath = "";
@@ -158,10 +204,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE50C32629C9E72600804457 /* Game.pb.swift in Sources */,
 				84AB58DD299C4D4F00524265 /* GameScene.swift in Sources */,
-				845707D929A7EF15001D3115 /* Service.swift in Sources */,
+				CE50C32E29CA100200804457 /* RoomViewController.swift in Sources */,
+				CE50C32C29C9E96800804457 /* Client.swift in Sources */,
+				845707D929A7EF15001D3115 /* ServiceDelegate.swift in Sources */,
+				CE50C32829C9E81200804457 /* GekitaiProvider.swift in Sources */,
 				84AB58DF299C4D4F00524265 /* GameViewController.swift in Sources */,
+				CE50C32529C9E72600804457 /* Game.grpc.swift in Sources */,
+				CE50C32A29C9E96000804457 /* Server.swift in Sources */,
 				84AB58D7299C4D4F00524265 /* AppDelegate.swift in Sources */,
+				CE50C31A29C7452F00804457 /* Game.proto in Sources */,
+				CE50C32029C749C100804457 /* RPCManager.swift in Sources */,
 				845707DB29A8E525001D3115 /* Index.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -386,21 +440,31 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		845707D529A7EEC1001D3115 /* XCRemoteSwiftPackageReference "socket" */ = {
+		CE50C31229C744A300804457 /* XCRemoteSwiftPackageReference "grpc-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			repositoryURL = "https://github.com/grpc/grpc-swift";
 			requirement = {
-				kind = exactVersion;
-				version = 15.2.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		845707D629A7EEC1001D3115 /* SocketIO */ = {
+		CE50C31329C744A300804457 /* CGRPCZlib */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 845707D529A7EEC1001D3115 /* XCRemoteSwiftPackageReference "socket" */;
-			productName = SocketIO;
+			package = CE50C31229C744A300804457 /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = CGRPCZlib;
+		};
+		CE50C31529C744A300804457 /* GRPC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE50C31229C744A300804457 /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = GRPC;
+		};
+		CE50C31729C744A300804457 /* protoc-gen-grpc-swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE50C31229C744A300804457 /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = "protoc-gen-grpc-swift";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

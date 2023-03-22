@@ -17,7 +17,25 @@ struct PositionPiece: Codable, Equatable {
     let y: Double
 }
 
-struct Move {
+struct Move: Codable {
     var previousPos: PositionPiece
     var newPos: PositionPiece
+}
+
+struct Mensagem: Codable {
+    var sender: Int
+    var content: String
+    var data: String?
+}
+
+enum Player: String {
+    case disconnected = ""
+    case playerTop = "playerTop"
+    case playerBottom = "playerBottom"
+}
+
+enum GameState: String {
+    case awaiting = "Aguardando jogador..."
+    case waiting = "Oponente jogando..."
+    case yourTurn = "Agora é sua vez!"
 }

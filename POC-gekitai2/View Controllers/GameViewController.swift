@@ -15,23 +15,7 @@ class TableCell: UITableViewCell {
     @IBOutlet weak var mensagem: UITextView!
 }
 
-struct Mensagem {
-    var nome: String
-    var msg: String
-    var data: String
-}
 
-enum Player: String {
-    case disconnected = ""
-    case playerTop = "playerTop"
-    case playerBottom = "playerBottom"
-}
-
-enum GameState: String {
-    case awaiting = "Aguardando jogador..."
-    case waiting = "Oponente jogando..."
-    case yourTurn = "Agora é sua vez!"
-}
 
 class GameViewController: UIViewController {
     @IBOutlet weak var skview: SKView!
@@ -40,19 +24,20 @@ class GameViewController: UIViewController {
     @IBOutlet weak var finalizarTurnoButton: UIButton!
     @IBOutlet weak var stateLabel: UILabel!
     
-    let service: Service = Service()
+    //let service: Service = Service()
     var textos = [Mensagem]() {
         didSet {
-            table.reloadData()
-            if !textos.isEmpty {
-                table.layoutIfNeeded()
-                table.scrollToRow(at: IndexPath(row: textos.count - 1, section: 0), at: .bottom, animated: true)
+            DispatchQueue.main.async {
+                self.table.reloadData()
+                if !self.textos.isEmpty {
+                    self.table.scrollToRow(at: IndexPath(row: self.textos.count - 1, section: 0), at: .bottom, animated: true)
+                }
             }
-            
         }
     }
     
     var player: Player = .disconnected
+    let user = UserDefaults.standard.integer(forKey: "number")
     
     var gameScene: GameScene {
         return skview.scene as! GameScene
@@ -84,7 +69,7 @@ class GameViewController: UIViewController {
         
         table.dataSource = self
         table.delegate = self
-        service.delegate = self
+        //service.delegate = self
         textfield.delegate = self
         
         if let scene = GKScene(fileNamed: "GameScene"), let scene = scene.rootNode as! GameScene? {
@@ -103,40 +88,54 @@ class GameViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         showStateView()
+        
+        RPCManager.shared.onMessage { (message) in
+            self.textos.append(message)
+            DispatchQueue.main.async {
+                self.table.reloadData()
+            }
+        }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-         
-    }
     
     @IBAction func enviaMensagem(_ sender: Any) {
         guard let mensagem = textfield.text else { return }
         if mensagem != "" {
-            service.enviaMensagem(nome: player.rawValue, mensagem: mensagem)
+            let message = Mensagem(sender: player.hashValue, content: mensagem)
+            RPCManager.shared.client.send(message) { _ in
+                self.textos.append(message)
+                DispatchQueue.main.async {
+                    self.table.reloadData()
+                }
+            }
+            //service.enviaMensagem(nome: player.rawValue, mensagem: mensagem)
+            //rpcManager.client.(nome: player.rawValue, mensagem: mensagem)
             self.textfield.text?.removeAll()
         }
     }
     
     @IBAction func finalizarTurno(_ sender: Any) {
         for move in gameScene.movesPices {
-            self.service.move(from: move.previousPos, to: move.newPos)
+            //self.service.move(from: move.previousPos, to: move.newPos)
+            //self.grpcClient.move(from: move.previousPos, to: move.newPos)
         }
-        self.service.newTurn()
+        //self.service.newTurn()
+        //self.grpcClient.newTurn()
+        
     }
     
     @IBAction func desistir(_ sender: Any) {
         let alert = UIAlertController(title: "Desistir", message: "Você realmente deseja desistir?", preferredStyle: .alert)
-        let exit = UIAlertAction(title: "Desistir", style: .destructive, handler: { _ in self.service.surreder() })
-        alert.addAction(exit)
+        //let exit = UIAlertAction(title: "Desistir", style: .destructive, handler: { _ in self.grpcClient.surreder() })
+        //alert.addAction(exit)
         alert.addAction(.init(title: "Voltar", style: .cancel, handler: .none))
         self.present(alert, animated: true, completion: nil)
     }
     
     //MARK: - Restart
     func restart() {
-        service.restart()
+        //service.restart()
+        //grpcClient.restart()
         viewDidLoad()
         viewDidAppear(true)
     }
@@ -163,14 +162,12 @@ extension GameViewController: UITableViewDataSource, UITableViewDelegate {
         // Reuse or create a cell.
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableCell
         // For a standard cell, use the UITableViewCell properties.
-        if textos[indexPath.row].nome == "playerBottom" {
+        if textos[indexPath.row].sender == user {
             cell.nome.text = "🟣 Roxos"
-        } else if textos[indexPath.row].nome == "playerTop" {
-            cell.nome.text = "🔴 Vermelhos"
         } else {
-            cell.nome.text = textos[indexPath.row].nome
+            cell.nome.text = "🔴 Vermelhos"
         }
-        cell.mensagem.text = textos[indexPath.row].msg
+        cell.mensagem.text = textos[indexPath.row].content
         cell.data.text = textos[indexPath.row].data
         return cell
     }
@@ -222,8 +219,9 @@ extension GameViewController: ServiceDelegate {
         gameScene.movePiece(originPos: originIndex, newPos: newIndex)
     }
     
-    func receivedMessage(_ name: String, msg: String, data: String) {
-        textos.append(Mensagem(nome: name, msg: msg, data: data))
+    func receivedMessage(_ name: Int, msg: String, data: String) {
+        
+        textos.append(Mensagem(sender: name, content: msg, data: data))
     }
 }
 

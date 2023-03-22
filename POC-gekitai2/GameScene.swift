@@ -40,6 +40,7 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         
+        
         originYellowPositions = [PositionPiece(x: 140.0, y: 120.0),
                                  PositionPiece(x: 200.0, y: 120.0),
                                  PositionPiece(x: 260.0, y: 120.0),
